@@ -58,3 +58,26 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+//dashboard logic here...
+
+exports.getDashboard = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "Welcome to your dashboard!",
+      user: {
+        userId: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        dob: user.dob,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
